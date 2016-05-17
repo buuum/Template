@@ -1,0 +1,24 @@
+{
+  "name": "buuum/template",
+  "type": "library",
+  "description": "Simple, fast and secure template engine for PHP",
+  "homepage": "https://github.com/buuum/Template",
+  "keywords": [
+    "template"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alfons Martinez",
+      "email": "alfonsmartinezparra@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Buuum\\Template\\": "src/Template"
+    }
+  },
+  "require": {
+    "php": ">=5.5.0"
+  }
+}
