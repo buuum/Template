@@ -5,14 +5,12 @@ namespace Buuum\Template;
 class Template
 {
 
-    private $public;
-    private $folder;
+    private $path;
     private $chars;
 
-    public function __construct($folder, $file = false, $chars = false)
+    public function __construct($path, $file = false, $chars = false)
     {
-        $this->public = 'Views';
-        $this->folder = $folder;
+        $this->path = $path;
         $this->chars = $chars;
 
         if (!empty($file) && $file != "false") {
@@ -24,13 +22,13 @@ class Template
 
     private function renderOne($file)
     {
-        $file = __DIR__ . '/../' . $this->folder . '/public/' . $file . '.php';
+        $file = $this->path . '/' . $file . '.php';
         $this->genfile($file);
     }
 
     private function renderAll()
     {
-        $root_ = dirname(__FILE__) . '/../' . $this->public . '/' . $this->folder . '/*.php';
+        $root_ = $this->path . '/*.php';
         $files = $this->rglob($root_);
 
         foreach ($files as $file) {
@@ -177,9 +175,9 @@ class Template
 
 
         if ($options) {
-            $value = "\$this->getUrl('" . $name . "', $options);";
+            $value = "\$this->getUrl('" . $name . "', $options)";
         } else {
-            $value = "\$this->getUrl('" . $name . "');";
+            $value = "\$this->getUrl('" . $name . "')";
         }
 
         return ($print) ? $this->printVar($value) : $value;
@@ -199,9 +197,9 @@ class Template
             $part = $parts[0];
         }
 
-        $url = $this->parseUrl($part, false);
+        //$url = $this->parseUrl($part, false);
 
-        return '<?=($this->router->isPageActual(' . $url . '))? "' . $class . '" : "";?>';
+        return $this->printVar("\$this->isPageActual('$part', '$class');");
 
     }
 
@@ -306,7 +304,7 @@ class Template
 
     public function setSelecteds($s)
     {
-        return '<?=$' . $s[1] . '?>';
+        return '<?=$' . $s[1] . '?> ';
     }
 
     public function printVar($value)

@@ -22,6 +22,52 @@ composer require buuum/template
 
 You may use your own autoloader as long as it follows PSR-0 or PSR-4 standards. Just put src directory contents in your vendor directory.
 
+## INITIALIZE
+```php
+$dir = __DIR__.'/views',
+$supportView = new ViewSupport();
+$view = new View($dir, $supportView);
+```
+
+### TEMPLATE TAGS
+
+#### FOREACH
+* {{foreach $items as $item}}
+* {{endforeach}}
+
+#### IF
+* {{if $success}}
+* {{elseif $error}}
+* {{else}}
+* {{endif}}
+
+#### INCLUDES
+* {{@$value}} => include $value
+* {{@/include/header}} => inclue __DIR__.'/include/header.php'
+
+#### PRINT
+* {{$var}}
+* {{var_dump($var)}}
+
+#### FORMS
+* %input(checked:check){:type=>"checkbox", :name=>"checkm[]", :value=>"1"}
+* <input <?=$check?> name="checkm[]" type="checkbox" value="1">
+
+* %option(selected:select){:value=>"2"} 2
+* <option <?=$select?> value="2">2</option>
+
+
+### TEMPLATE
+
+| TAG | PARSER |
+|---|---|
+| {{URLIMG}}  | getImgPath() |
+| {{\*index}}  | getUrl($name)|
+| {{\*demo:id\|32}} | getUrl($name, $options) |
+| {{e. text}} | getText($text) |
+| {{e. text %s:::hola}} | getText($text, $params) |
+| {{\*\*index::classname}} | isPageActual($url, $classname) |
+
 
 ## LICENSE
 
