@@ -5,33 +5,41 @@ namespace Buuum\Template;
 
 class View
 {
-
-    protected $dir;
-
     /**
      * @var ParseViewInterface
      */
     private $parseView;
 
-    public function __construct($viewpath, ParseViewInterface $parseView)
-    {
+    /**
+     * @var Header
+     */
+    public $header;
 
-        $this->dir = $viewpath;
+    public function __construct($host, ParseViewInterface $parseView)
+    {
         $this->parseView = $parseView;
+        $this->header = new Header($host);
     }
 
-    public function getDir()
+    public function getHeader($var)
     {
-        return $this->dir;
+        return $this->header->get($var);
+    }
+
+    public function getLink($type)
+    {
+        return $this->parseView->getLink($type, $this->header->getHost(), $this->header->getPlugins());
     }
 
     public function render($view, array $data = array(), $layout)
     {
         extract($data);
 
-        $view = $this->dir . '/' . $view . '.php';
+        $dir = $this->parseView->getViewsPath();
+
+        $view = $dir . '/' . $view . '.php';
         if ($layout) {
-            $layout = $this->dir . '/' . $layout . '.php';
+            $layout = $dir . '/' . $layout . '.php';
         } else {
             $layout = $view;
         }

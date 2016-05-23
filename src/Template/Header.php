@@ -18,14 +18,12 @@ class Header
     protected $plugins = array();
     protected $cssjsversion;
 
-    public function __construct($host, $scope, $cssjsversion = false)
+    public function __construct($host)
     {
         $this->host = $host;
-        $this->cssjsversion = $cssjsversion;
-        $this->scope = $scope;
     }
 
-    public function get()
+    public function getArray()
     {
 
         if ($this->favicon == '/favicon.ico') {
@@ -36,25 +34,38 @@ class Header
         }
 
         $array = array(
-            'index'         => $this->index,
-            'feed'          => $this->feed,
-            'feedurl'       => $this->feedurl,
-            'title'         => $this->title,
-            'favicon'       => $this->favicon,
-            'description'   => $this->description,
-            'keywords'      => $this->keywords,
-            'canonical'     => $this->canonical,
-            'pluginscssurl' => $this->pluginsurl('css'),
-            'pluginsjsurl'  => $this->pluginsurl('js')
+            'index'       => $this->index,
+            'feed'        => $this->feed,
+            'feedurl'     => $this->feedurl,
+            'title'       => $this->title,
+            'favicon'     => $this->favicon,
+            'description' => $this->description,
+            'keywords'    => $this->keywords,
+            'canonical'   => $this->canonical
         );
 
         return $array;
     }
 
+    public function get($var)
+    {
+        return $this->$var;
+    }
+
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    public function getPlugins()
+    {
+        return $this->plugins;
+    }
+
     public function pluginsurl($tipo = 'css')
     {
         $files = base64_encode(implode(',', $this->plugins));
-        $version = ($this->cssjsversion)? $this->cssjsversion : 0;
+        $version = ($this->cssjsversion) ? $this->cssjsversion : 0;
         return '//' . $this->host . '/assets/' . $tipo . '.php?f=' . $this->scope . '&p=' . $files . '&pre=' . $version;
     }
 
