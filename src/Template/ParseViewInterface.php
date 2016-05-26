@@ -10,5 +10,6 @@ interface ParseViewInterface
     public function getImgPath();
     public function getViewsPath();
     public function getLink($type, $host, $files);
-    public function isPageActual($url, $classname);
+    public function isPageActual($name, $classname);
+    public function pageActualStartsWith($name, $classname);
 }
