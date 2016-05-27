@@ -224,7 +224,30 @@ class Template
             $part = $parts[0];
         }
 
+        //$url = $this->parseUrl($part, false);
+
         return $this->printVar("\$this->pageActualStartsWith('$part', '$class');");
+    }
+
+    private function parseUrlContieneClassOld($templates)
+    {
+
+        $part = str_replace('{{***', '', $templates);
+        $part = str_replace('}}', '', $part);
+
+        $parts = explode('::', $part);
+        $class = 'active';
+        if (!empty($parts[1])) {
+            $class = $parts[1];
+            $part = $parts[0];
+        }
+
+        $elements = explode(':', $part);
+        $array = var_export($elements, true);
+        $array = str_replace("'", '"', $array);
+        $array = $this->compression($array);
+
+        return "<?=(\$this->router->PageActualContiene($array))? \"$class\" : \"\"?>";
     }
 
     private function parseInclude($include_file)
