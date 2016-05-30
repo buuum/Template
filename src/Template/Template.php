@@ -257,7 +257,7 @@ class Template
         $part = str_replace('}}', '', $part);
 
         if (substr($part, 0, 1) == '/') {
-            return '<?php include __DIR__."/' . substr_replace($part, '', 0, 1) . '.php"; ?>';
+            return '<?php include $this->getViewsPath()."/' . substr_replace($part, '', 0, 1) . '.php"; ?>';
         } else {
             return '<?php include $' . $part . ';?>';
         }
