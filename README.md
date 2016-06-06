@@ -51,10 +51,10 @@ $view = new View($dir, $supportView);
 
 #### FORMS
 * %input(checked:check){:type=>"checkbox", :name=>"checkm[]", :value=>"1"}
-* <input <?=$check?> name="checkm[]" type="checkbox" value="1">
+* <input <?=($check)? 'checked' : ''?> name="checkm[]" type="checkbox" value="1">
 
 * %option(selected:select){:value=>"2"} 2
-* <option <?=$select?> value="2">2</option>
+* <option <?=($select)? 'selected' : ''?> value="2">2</option>
 
 
 ### TEMPLATE

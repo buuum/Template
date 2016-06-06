@@ -308,7 +308,7 @@ class Template
     public function setCheckboxs($template)
     {
         // {{checked:fo
-        $template = preg_replace_callback('/checked:([a-zA-Z0-9]+?)\s/s', array($this, 'setSelecteds'), $template);
+        $template = preg_replace_callback('/checked:([a-zA-Z0-9]+?)\s/s', array($this, 'setChecked'), $template);
         return $template;
     }
 
@@ -321,7 +321,12 @@ class Template
 
     public function setSelecteds($s)
     {
-        return '<?=$' . $s[1] . '?> ';
+        return '<?=($' . $s[1] . ')? " selected " : ""?> ';
+    }
+
+    public function setChecked($s)
+    {
+        return '<?=($' . $s[1] . ')? " checked " : ""?> ';
     }
 
     public function printVar($value)
