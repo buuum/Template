@@ -42,8 +42,9 @@ $view = new View($dir, $supportView);
 * {{endif}}
 
 #### INCLUDES
-* {{@$value}} => include $value
-* {{@/include/header}} => inclue __DIR__.'/include/header.php'
+* {{@value}} => include $value
+* {{@@value}} => include __DIR__.'/'.$value;
+* {{@/include/header}} => include __DIR__.'/include/header.php';
 
 #### PRINT
 * {{$var}}

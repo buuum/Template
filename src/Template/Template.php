@@ -71,6 +71,8 @@ class Template
                 $template = str_replace($v, $this->parseUrlClass($v), $template);
             } elseif (strpos($v, '{{*') !== false) {
                 $template = str_replace($v, $this->parseUrl($v), $template);
+            } elseif (strpos($v, '{{@@') !== false) {
+                $template = str_replace($v, $this->parseIncludeVar($v), $template);
             } elseif (strpos($v, '{{@') !== false) {
                 $template = str_replace($v, $this->parseInclude($v), $template);
             } elseif (strpos($v, '{{e.') !== false) {
@@ -261,6 +263,15 @@ class Template
         } else {
             return '<?php include $' . $part . ';?>';
         }
+    }
+
+    private function parseIncludeVar($include_file)
+    {
+
+        $part = str_replace('{{@@', '', $include_file);
+        $part = str_replace('}}', '', $part);
+
+        return '<?php include $this->getViewsPath()."/".$'.$part.';?>';
     }
 
     private function replace_chars($output)
