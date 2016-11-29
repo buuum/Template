@@ -125,6 +125,7 @@ class Header
                 $arrs[] = $val;
             }
             $this->plugins = array_merge($this->plugins, $arrs);
+            $this->plugins = array_unique($this->plugins);
         }
         return $this;
     }
