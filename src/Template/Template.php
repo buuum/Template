@@ -123,6 +123,7 @@ class Template
 
         if (!empty($parts)) {
 
+            $parts = array_map('trim', $parts);
             $array_values = [];
             foreach ($parts as $part) {
                 $array_values[] = $this->applyFilters($part, false);
