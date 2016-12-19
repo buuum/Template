@@ -95,7 +95,8 @@ class Template
             } elseif (strpos($v, '=') !== false) {
                 $template = $this->str_replace_first($v, "<?php $v2; ?>", $template);
             } else {
-                $template = $this->str_replace_first($v, "<?=$v2?>", $template);
+                $v2 = $this->applyFilters($v2);
+                $template = $this->str_replace_first($v, $v2, $template);
             }
 
             $template = $this->parse($template, $vars);
@@ -122,8 +123,11 @@ class Template
 
         if (!empty($parts)) {
 
-            $array = var_export($parts, true);
-            $array = str_replace("'", "", $array);
+            $array_values = [];
+            foreach ($parts as $part) {
+                $array_values[] = $this->applyFilters($part, false);
+            }
+            $array = var_export($array_values, true);
             $array = $this->compression($array);
 
         }
@@ -231,27 +235,6 @@ class Template
         return $this->printVar("\$this->pageActualStartsWith('$part', '$class');");
     }
 
-    private function parseUrlContieneClassOld($templates)
-    {
-
-        $part = str_replace('{{***', '', $templates);
-        $part = str_replace('}}', '', $part);
-
-        $parts = explode('::', $part);
-        $class = 'active';
-        if (!empty($parts[1])) {
-            $class = $parts[1];
-            $part = $parts[0];
-        }
-
-        $elements = explode(':', $part);
-        $array = var_export($elements, true);
-        $array = str_replace("'", '"', $array);
-        $array = $this->compression($array);
-
-        return "<?=(\$this->router->PageActualContiene($array))? \"$class\" : \"\"?>";
-    }
-
     private function parseInclude($include_file)
     {
 
@@ -308,6 +291,10 @@ class Template
         $array = explode("\n", $buffer);
         foreach ($array as $num => $arr) {
             if (trim($arr) != '') {
+                if (strpos($arr, "'$") !== false) {
+                    $arr = str_replace(["'$", "\\'"], ["$", "'"], $arr);
+                    $arr = substr($arr, 0, -2) . ',';
+                }
                 $buff .= $arr;
                 $buff .= "\n";
             }
@@ -343,6 +330,39 @@ class Template
     public function printVar($value)
     {
         return "<?=$value?>";
+    }
+
+    protected function applyFilters($var, $print = true)
+    {
+        $partes = explode('|', $var);
+        $variable = $partes[0];
+        $filter = (!empty($partes[1])) ? $partes[1] : false;
+
+        if ($filter) {
+            $filter_name = $this->getFilterName($filter);
+            $filter_value = $this->getFilterValue($filter);
+            $variable = "\$this->filter_$filter_name($variable, [$filter_value])";
+        }
+
+        return ($print) ? $this->printVar($variable) : $variable;
+    }
+
+    protected function getFilterValue($filter)
+    {
+        if (strpos($filter, "(") !== false) {
+            $filter = substr($filter, 0, -1);
+            $values = array_slice(explode("(", $filter), 1);
+            return $values[0];
+        }
+        return false;
+    }
+
+    protected function getFilterName($filter)
+    {
+        if (strpos($filter, "(") !== false) {
+            $filter = current(array_slice(explode("(", $filter), 0, 1));
+        }
+        return $filter;
     }
 
 }

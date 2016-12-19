@@ -92,6 +92,29 @@ $view = new View($dir, $supportView);
 </head>
 ```
 
+## ADD SUPPORT FOR FILTERS
+on viewsupprot
+```php
+
+class ViewSupport implements ParseViewInt
+{
+    public function filter_number($value, $params)
+    {
+        if (!empty($params)) {
+            return number_format($value, ...$params);
+        }
+        return number_format($value, 0, '.',',');
+    }
+}
+
+```
+
+on template
+```
+{{$var|number}}
+{{$var|number(2,'.',',')}}
+{{2000|number}}
+```
 
 ## LICENSE
 
