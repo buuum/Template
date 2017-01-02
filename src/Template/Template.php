@@ -92,6 +92,8 @@ class Template
                 $template = $this->str_replace_first($v, '<?php foreach(' . $part . '):?>', $template);
             } elseif (strpos($v, '{{endforeach') !== false) {
                 $template = $this->str_replace_first($v, '<?php endforeach; ?>', $template);
+            } elseif (strpos($v, ' or ') !== false) {
+                $template = $this->str_replace_first($v, $this->parseOr($v), $template);
             } elseif (strpos($v, '=') !== false) {
                 $template = $this->str_replace_first($v, "<?php $v2; ?>", $template);
             } else {
@@ -108,6 +110,16 @@ class Template
     private function str_replace_first($search, $replace, $subject)
     {
         return implode($replace, explode($search, $subject, 2));
+    }
+
+    private function parseOr($v)
+    {
+        $part = str_replace(array('{{', '}}'), array('', ''), $v);
+        $parts = explode(' or ', $part);
+
+        $value = "(isset({$parts[0]}))? $parts[0] : $parts[1]";
+
+        return $this->printVar($value);
     }
 
     private function parseText($v)
@@ -255,7 +267,7 @@ class Template
         $part = str_replace('{{@@', '', $include_file);
         $part = str_replace('}}', '', $part);
 
-        return '<?php include $this->getViewsPath()."/".$'.$part.';?>';
+        return '<?php include $this->getViewsPath()."/".$' . $part . ';?>';
     }
 
     private function replace_chars($output)

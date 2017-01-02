@@ -49,6 +49,7 @@ $view = new View($dir, $supportView);
 #### PRINT
 * {{$var}}
 * {{var_dump($var)}}
+* {{$var or 'deafault text'}}
 
 #### FORMS
 * %input(checked:check){:type=>"checkbox", :name=>"checkm[]", :value=>"1"}
