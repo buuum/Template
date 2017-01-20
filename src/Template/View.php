@@ -31,9 +31,17 @@ class View
         return $this->parseView->getLink($type, $this->header->getHost(), $this->header->getPlugins());
     }
 
-    public function render($view, array $data = array(), $layout)
+    public function render($view, $data = null, $layout)
     {
-        extract($data);
+        if ($data) {
+            if (is_array($data)) {
+                extract($data);
+            } elseif (is_object($data)) {
+                foreach ($data as $k => $value) {
+                    $$k = $value;
+                }
+            }
+        }
 
         $dir = $this->parseView->getViewsPath();
 
