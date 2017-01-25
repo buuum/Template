@@ -92,7 +92,7 @@ class Template
                 $template = $this->str_replace_first($v, '<?php foreach(' . $part . '):?>', $template);
             } elseif (strpos($v, '{{endforeach') !== false) {
                 $template = $this->str_replace_first($v, '<?php endforeach; ?>', $template);
-            } elseif (strpos($v, ' or ') !== false) {
+            } elseif (strpos($v, ' or') !== false) {
                 $template = $this->str_replace_first($v, $this->parseOr($v), $template);
             } elseif (strpos($v, '=') !== false) {
                 $template = $this->str_replace_first($v, "<?php $v2; ?>", $template);
@@ -115,7 +115,8 @@ class Template
     private function parseOr($v)
     {
         $part = str_replace(array('{{', '}}'), array('', ''), $v);
-        $parts = explode(' or ', $part);
+        $parts = explode(' or', $part);
+        $parts = array_map('trim', $parts);
 
         $default = (empty($parts[1]))? "''" : $parts[1];
 
