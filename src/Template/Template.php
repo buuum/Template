@@ -117,7 +117,9 @@ class Template
         $part = str_replace(array('{{', '}}'), array('', ''), $v);
         $parts = explode(' or ', $part);
 
-        $value = "(isset({$parts[0]}))? $parts[0] : $parts[1]";
+        $default = (empty($parts[1]))? "''" : $parts[1];
+
+        $value = "(isset({$parts[0]}))? $parts[0] : $default";
 
         return $this->printVar($value);
     }
