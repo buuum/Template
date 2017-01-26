@@ -75,6 +75,8 @@ class Template
                 $template = str_replace($v, $this->parseIncludeVar($v), $template);
             } elseif (strpos($v, '{{@') !== false) {
                 $template = str_replace($v, $this->parseInclude($v), $template);
+            } elseif (strpos($v, '{{e.plural') !== false) {
+                $template = str_replace($v, $this->parseTextPlural($v), $template);
             } elseif (strpos($v, '{{e.') !== false) {
                 $template = str_replace($v, $this->parseText($v), $template);
             } elseif (strpos($v, '{{endif') !== false) {
@@ -118,11 +120,70 @@ class Template
         $parts = explode(' or', $part);
         $parts = array_map('trim', $parts);
 
-        $default = (empty($parts[1]))? "''" : $parts[1];
+        $default = (empty($parts[1])) ? "''" : $parts[1];
 
         $value = "(isset({$parts[0]}))? $parts[0] : $default";
 
         return $this->printVar($value);
+    }
+
+    private function parseTextPlural($v)
+    {
+        $part = str_replace(array('{{e.plural', '}}'), array('', ''), $v);
+        $parts = explode(':::', $part);
+
+        $plurals = explode('|', $parts[0]);
+        array_shift($parts);
+
+        if (!empty($parts)) {
+
+            $parts = array_map('trim', $parts);
+            $array_values = [];
+            foreach ($parts as $part) {
+                $array_values[] = $this->applyFilters($part, false);
+            }
+            $array = var_export($array_values, true);
+            $array = $this->compression($array);
+        }
+
+        $count_compare = $parts[0];
+
+        $plurals = array_map('trim', $plurals);
+        $re = '@^({(.*)})?.*@';
+        $return = '';
+        foreach ($plurals as $n => $plural) {
+            preg_match($re, $plural, $matches);
+
+            $condition = ($n == 0) ? "if" : "elseif";
+
+            $end = false;
+            $num = 0;
+            if (!empty($matches[1])) {
+                $text = str_replace($matches[1], '', $matches[0]);
+                $num = $matches[2];
+            } else {
+                $text = $matches[0];
+                $end = true;
+            }
+
+            if ($end) {
+                $return .= "<?php else: ?>";
+            } else {
+                $return .= "<?php $condition($count_compare == $num): ?>";
+            }
+
+            if (strpos($text, '%s') !== false) {
+                $return .= $this->printVar("\$this->getText(\"$text\", $array)");
+            } else {
+                $return .= $this->printVar("\$this->getText(\"$text\")");
+            }
+
+        }
+
+        $return .= "<?php endif; ?>";
+
+        return $return;
+
     }
 
     private function parseText($v)

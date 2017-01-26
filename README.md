@@ -50,6 +50,8 @@ $view = new View($dir, $supportView);
 * {{$var}}
 * {{var_dump($var)}}
 * {{$var or 'deafault text'}}
+* {{$var or}} alias of {{$var or ''}}
+* {{e.plural {0}no hay votos|{1}%s voto|%s votos:::$total_votes}}
 
 #### FORMS
 * %input(checked:check){:type=>"checkbox", :name=>"checkm[]", :value=>"1"}
