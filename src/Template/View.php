@@ -34,13 +34,10 @@ class View
     public function render($view, $data = null, $layout)
     {
         if ($data) {
-            if (is_array($data)) {
-                extract($data);
-            } elseif (is_object($data)) {
-                foreach ($data as $k => $value) {
-                    $$k = $data->$k;
-                }
+            if (is_object($data)) {
+                $data = (array)$data;
             }
+            extract($data);
         }
 
         $dir = $this->parseView->getViewsPath();
