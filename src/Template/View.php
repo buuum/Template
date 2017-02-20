@@ -38,7 +38,7 @@ class View
                 extract($data);
             } elseif (is_object($data)) {
                 foreach ($data as $k => $value) {
-                    $$k = $value;
+                    $$k = $data->$k;
                 }
             }
         }
