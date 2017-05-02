@@ -173,9 +173,9 @@ class Template
             }
 
             if (strpos($text, '%s') !== false) {
-                $return .= $this->printVar("\$this->getText(\"$text\", $array)");
+                $return .= $this->printVar("\$this->translate(\"$text\", $array)");
             } else {
-                $return .= $this->printVar("\$this->getText(\"$text\")");
+                $return .= $this->printVar("\$this->translate(\"$text\")");
             }
 
         }
@@ -210,9 +210,9 @@ class Template
         }
 
         if ($array) {
-            $value = "\$this->getText(\"$text\", $array)";
+            $value = "\$this->translate(\"$text\", $array)";
         } else {
-            $value = "\$this->getText(\"$text\")";
+            $value = "\$this->translate(\"$text\")";
         }
 
         return $this->printVar($value);
@@ -319,7 +319,7 @@ class Template
         $part = str_replace('}}', '', $part);
 
         if (substr($part, 0, 1) == '/') {
-            return '<?php include $this->getViewsPath()."/' . substr_replace($part, '', 0, 1) . '.php"; ?>';
+            return '<?php include __DIR__."/' . substr_replace($part, '', 0, 1) . '.php"; ?>';
         } else {
             return '<?php include $' . $part . ';?>';
         }
@@ -331,7 +331,7 @@ class Template
         $part = str_replace('{{@@', '', $include_file);
         $part = str_replace('}}', '', $part);
 
-        return '<?php include $this->getViewsPath()."/".$' . $part . ';?>';
+        return '<?php include __DIR__."/".$' . $part . ';?>';
     }
 
     private function replace_chars($output)
