@@ -12,4 +12,5 @@ interface ParseViewInterface
     public function getLink($type, $host, $files);
     public function isPageActual($name, $classname);
     public function pageActualStartsWith($name, $classname);
+    public function setScope($scope);
 }

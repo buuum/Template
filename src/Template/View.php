@@ -62,4 +62,8 @@ class View
         return call_user_func_array(array($this->parseView, $name), $arguments);
     }
 
+    public function setScope($scope){
+        $this->parseView->setScope($scope);
+    }
+
 }
