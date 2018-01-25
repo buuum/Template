@@ -31,7 +31,7 @@ class View
         return $this->parseView->getLink($type, $this->header->getHost(), $this->header->getPlugins());
     }
 
-    public function render($view, $data = null, $layout)
+    public function render($view, $data = null, $layout = null)
     {
         if ($data) {
             if (is_object($data)) {
